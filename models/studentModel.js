@@ -9,30 +9,40 @@ const studentSchema = mongoose.Schema({
 		type: String,
 		required: [true, 'Father name is required.']
 	},
-	gender: {
-		type: String,
-		required: [true, 'Gender is required.'],
-		enum: ['male', 'female']
+	dateOfBirth: {
+		type: Date,
+		required: [true, 'Date of birth is required.']
+	},
+	photo: String,
+	mobileNo: {
+		type: Number,
+		required: [true, 'Mobile number is required.'],
+		minLength: 11,
+		maxLength: 11
+	},
+	cnic: {
+		type: Number,
+		required: [true, 'CNIC or B Form is required'],
+		minLength: 13,
+		maxLength: 13
 	},
 	address: {
 		type: String,
 		trim: true,
-	},
-	mobileNo: {
-		type: String,
-		required: [true, 'Mobile number is required.']
-	},
-	dateOfJoining: {
-		type: Date,
-		default: Date.now
+		minLength: 5,
+		maxLength: 255
 	},
 	course: {
 		type: String,
 		required: [true, 'Course is required.']
 	},
-	teacher: {
-		type: String,
-		required: [true, 'Teacher is required.']
+	dateOfAdmission: {
+		type: Date,
+		default: Date.now
+	},
+	admissionNumber: {
+		type: Number,
+		default: new Date().getTime()
 	}
 });
 

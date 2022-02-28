@@ -1,14 +1,14 @@
-const Teacher = require('../models/teacherModel');
+const Employee = require('../models/employeeModel');
 
-exports.getAllTeachers = async (req, res) => {
+exports.getAllEmployees = async (req, res) => {
 	try {
-		const teachers = await Teacher.find();
+		const employees = await Employee.find();
 	
 		res.status(200).json({
 			status: 'success',
-			records: teachers.length,
+			records: employees.length,
 			data: {
-				teachers
+				employees
 			}
 		});
 	}
@@ -20,14 +20,14 @@ exports.getAllTeachers = async (req, res) => {
 	}
 }
 
-exports.createTeacher = async (req, res) => {
+exports.createEmployee = async (req, res) => {
 	try {
-		const teacher = await Teacher.create(req.body);
+		const employee = await Employee.create(req.body);
 
 		res.status(201).json({
 			status: 'success',
 			data: {
-				teacher
+				employee
 			}
 		});
 	}

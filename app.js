@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 
-const studentsRoute = require('./routes/studentsRoute');
-const teacherRoute = require('./routes/teacherRoute');
+const studentsRouter = require('./routes/studentsRoute');
+const employeeRouter = require('./routes/employeeRoute');
 
 app.get('/', (req, res) => {
 	res.status(200).send('Welcome to admin portal')
@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 
-app.use('/api/v1/students', studentsRoute);
-app.use('/api/v1/teachers', teacherRoute);
+app.use('/api/v1/students', studentsRouter);
+app.use('/api/v1/employees', employeeRouter);
 
 module.exports = app;
