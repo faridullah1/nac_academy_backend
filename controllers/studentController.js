@@ -1,4 +1,4 @@
-const Student = require('../models/studentModel');
+const { Student, validate } = require('../models/studentModel');
 
 exports.getAllStudents = async (req, res) => {
 	try {
@@ -48,6 +48,15 @@ exports.getStudent = async (req, res) => {
 
 exports.createStudent = async (req, res) => {
 	try {
+		const { error } = validate(req.body);
+
+		if (error) {
+			return res.status(400).json({
+				status: 'fail',
+				message: error.details[0].message
+			});
+		}
+
 		const student = await Student.create(req.body);
 
 		res.status(201).json({
@@ -57,10 +66,10 @@ exports.createStudent = async (req, res) => {
 			}
 		});
 	}
-	catch(err) {
+	catch(error) {
 		res.status(400).json({
 			status: 'fail',
-			message: err
+			message: error
 		});
 	}
 }

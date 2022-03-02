@@ -1,13 +1,18 @@
+const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const studentSchema = mongoose.Schema({
 	fullName: {
 		type: String,
-		required: [true, 'Student name is required.']
+		required: [true, 'Student name is required.'],
+		minLength: 5,
+		maxLength: 55
 	},
 	fatherName: {
 		type: String,
-		required: [true, 'Father name is required.']
+		required: [true, 'Father name is required.'],
+		minLength: 5,
+		maxLength: 55
 	},
 	dateOfBirth: {
 		type: Date,
@@ -15,13 +20,13 @@ const studentSchema = mongoose.Schema({
 	},
 	photo: String,
 	mobileNo: {
-		type: Number,
+		type: String,
 		required: [true, 'Mobile number is required.'],
 		minLength: 11,
 		maxLength: 11
 	},
 	cnic: {
-		type: Number,
+		type: String,
 		required: [true, 'CNIC or B Form is required'],
 		minLength: 13,
 		maxLength: 13
@@ -33,8 +38,8 @@ const studentSchema = mongoose.Schema({
 		maxLength: 255
 	},
 	course: {
-		type: String,
-		required: [true, 'Course is required.']
+		type: mongoose.Schema.ObjectId,
+		ref: 'Course'
 	},
 	dateOfAdmission: {
 		type: Date,
@@ -46,6 +51,31 @@ const studentSchema = mongoose.Schema({
 	}
 });
 
+studentSchema.pre(/^find/, function(next) {
+	this.populate({
+		path: 'course',
+		select: "name"
+	});
+
+	next();
+})
+
+function validateStudent(course) {
+	const schema = Joi.object({
+		fullName: Joi.string().required().min(5).max(55),
+		fatherName: Joi.string().required().min(5).max(55),
+		dateOfBirth: Joi.date().required(),
+		mobileNo: Joi.string().required().min(11).max(11),
+		cnic: Joi.string().required().min(13).max(13),
+		course: Joi.required(),
+		photo: Joi.string(),
+		address: Joi.string()
+	});
+
+	return schema.validate(course);
+}
+
 const Student = mongoose.model('Student', studentSchema);
 
-module.exports = Student;
+exports.Student = Student;
+exports.validate = validateStudent;

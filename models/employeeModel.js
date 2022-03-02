@@ -15,7 +15,7 @@ const employeeSchema = mongoose.Schema({
 		required: [true, 'Qualification is required.']
 	},
 	experience: {
-		type: String,
+		type: Number, // Year in number
 		required: [true, 'Experience is required.']
 	},
 	role: {
@@ -25,7 +25,9 @@ const employeeSchema = mongoose.Schema({
 	},
 	mobileNo: {
 		type: String,
-		require: [true, 'Phone is required.']
+		required: [true, 'mobileNo is required.'],
+		minLength: 11,
+		maxLength: 11
 	},
 	email: String,
 	photo: String,
