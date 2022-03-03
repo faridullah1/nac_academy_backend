@@ -3,22 +3,13 @@ const Employee = require('../models/employeeModel');
 
 exports.createCourse = async (req, res) => {
 	try {
-		const { error } = validate(req.body);
-		if (error) {
-			return res.status(400).json({
-				status: 'fail',
-				message: error.details[0].message
-			});
-		}
-
-		const teacher = await Employee.findById(req.body.teacherId);
+		const teacher = await Employee.findById(req.body.teacher);
 		if (!teacher) {
 			return res.status(400).json({
 				status: 'fail',
 				message: 'Teacher with the given id was not found'
 			});
 		}
-
 
 		const course = await Course.create({
 			name: req.body.name,
