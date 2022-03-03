@@ -7,8 +7,10 @@ dotenv.config({
 
 const app = require('./app');
 
-mongoose.connect(process.env.DATABASE_LOCAL).then(() => {
+mongoose.connect(process.env.DATABASE).then(() => {
 	console.log('Connected To Database');
+}).catch(error => {
+	console.log('error connecting to db:', error);
 });
 
 const port = process.env.PORT || 3000;
