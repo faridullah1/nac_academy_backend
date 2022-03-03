@@ -54,7 +54,7 @@ const studentSchema = mongoose.Schema({
 studentSchema.pre(/^find/, function(next) {
 	this.populate({
 		path: 'course',
-		select: "name"
+		select: "name teacher"
 	});
 
 	next();
