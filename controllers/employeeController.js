@@ -82,7 +82,7 @@ exports.updateEmployee = async (req, res) => {
 
 exports.deleteEmployee = async (req, res) => {
 	try {
-		const employee = await e.findByIdAndDelete(req.params.id);
+		const employee = await Employee.findByIdAndDelete(req.params.id);
 
 		res.status(204).json({
 			status: 'success',
