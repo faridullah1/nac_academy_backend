@@ -2,7 +2,18 @@ const Employee = require('../models/employeeModel');
 
 exports.getAllEmployees = async (req, res) => {
 	try {
-		const employees = await Employee.find();
+		// Build Query
+		const queryObj = { ...req.query };
+		const excludedFields = ['sort', 'page', 'limit', 'fields'];
+		excludedFields.forEach(el => delete queryObj[el]);
+
+		let queryStr = JSON.stringify(queryObj);
+		queryStr = queryStr.replace(/\b(regex)\b/g, match => `$${match}`);
+
+		const query = Employee.find(JSON.parse(queryStr));
+
+		// Execute Query
+		const employees = await query;
 	
 		res.status(200).json({
 			status: 'success',
