@@ -1,19 +1,14 @@
 const { Student, validate } = require('../models/studentModel');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.getAllStudents = async (req, res) => {
 	try {
-		const queryObj = { ...req.query };
-		const excludedFields = ['sort', 'page', 'limit', 'fields'];
-		excludedFields.forEach(el => delete queryObj[el]);
-
-		let queryStr = JSON.stringify(queryObj);
-		queryStr = queryStr.replace(/\b(regex)\b/g, match => `$${match}`);
-
-		const students = await Student.find(JSON.parse(queryStr));
+		const features = new APIFeatures(Student.find(), req.query);
+		const students = features.query;
 	
 		res.status(200).json({
 			status: 'success',
-			records: students.length,
+			records: students.Count(),
 			data: {
 				students
 			}

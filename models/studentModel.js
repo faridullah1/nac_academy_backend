@@ -5,13 +5,13 @@ const studentSchema = mongoose.Schema({
 	fullName: {
 		type: String,
 		required: [true, 'Student name is required.'],
-		minLength: 5,
+		minLength: 3,
 		maxLength: 55
 	},
 	fatherName: {
 		type: String,
 		required: [true, 'Father name is required.'],
-		minLength: 5,
+		minLength: 3,
 		maxLength: 55
 	},
 	dateOfBirth: {
@@ -58,7 +58,7 @@ studentSchema.pre(/^find/, function(next) {
 	});
 
 	next();
-})
+});
 
 function validateStudent(course) {
 	const schema = Joi.object({

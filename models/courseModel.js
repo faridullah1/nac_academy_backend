@@ -8,12 +8,10 @@ const courseSchema = mongoose.Schema({
 		minLength: 3,
 		maxLength: 55
 	},
-	teacher: new mongoose.Schema({
-		fullName: {
-			type: String,
-			required: [true, 'Teacher Name is required.']
-		},
-	}),
+	teacher: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Employee'
+	},
 	price: {
 		type: Number,
 		required: [true, 'price is required'],
@@ -25,10 +23,18 @@ const courseSchema = mongoose.Schema({
 	}
 });
 
+courseSchema.pre(/^find/, function(next) {
+	this.populate({
+		path: 'teacher',
+		select: "fullName"
+	});
+
+	next();
+})
+
 function validateCourse(course) {
 	const schema = Joi.object({
 		name: Joi.string().required().min(3).max(55),
-		teacherId: Joi.string().required(),
 		price: Joi.number().required().min(0),
 		duration: Joi.string().required()
 	});

@@ -1,23 +1,17 @@
 const Employee = require('../models/employeeModel');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.getAllEmployees = async (req, res) => {
 	try {
 		// Build Query
-		const queryObj = { ...req.query };
-		const excludedFields = ['sort', 'page', 'limit', 'fields'];
-		excludedFields.forEach(el => delete queryObj[el]);
-
-		let queryStr = JSON.stringify(queryObj);
-		queryStr = queryStr.replace(/\b(regex)\b/g, match => `$${match}`);
-
-		const query = Employee.find(JSON.parse(queryStr));
+		const features = new APIFeatures(Employee.find(), req.query).filter().sort().limitFields().paginate();
 
 		// Execute Query
-		const employees = await query;
+		const employees = await features.query;
 	
 		res.status(200).json({
 			status: 'success',
-			records: employees.length,
+			records: employees.Count(),
 			data: {
 				employees
 			}
