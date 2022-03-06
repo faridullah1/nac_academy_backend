@@ -4,11 +4,11 @@ const APIFeatures = require('../utils/apiFeatures');
 exports.getAllStudents = async (req, res) => {
 	try {
 		const features = new APIFeatures(Student.find(), req.query);
-		const students = features.query;
+		const students = await features.query;
 	
 		res.status(200).json({
 			status: 'success',
-			records: students.Count(),
+			records: await Student.count(),
 			data: {
 				students
 			}
