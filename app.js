@@ -7,6 +7,7 @@ const app = express();
 const studentsRouter = require('./routes/studentsRoute');
 const employeeRouter = require('./routes/employeeRoute');
 const courseRouter = require('./routes/courseRoute');
+const viewRouter = require('./routes/viewRoute');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,9 +21,13 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/v1/students', studentsRouter);
 app.use('/api/v1/employees', employeeRouter);
 app.use('/api/v1/courses', courseRouter);
+app.use('/', viewRouter);
 
-app.get('/*', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-});
+app.all('*', (req, res) => {
+	res.status(404).json({
+		status: 'fail',
+		message: `Can't find ${req.originalUrl} on this server`
+	});
+})
 
 module.exports = app;
