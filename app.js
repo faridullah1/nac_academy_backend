@@ -8,6 +8,8 @@ const studentsRouter = require('./routes/studentsRoute');
 const employeeRouter = require('./routes/employeeRoute');
 const courseRouter = require('./routes/courseRoute');
 const viewRouter = require('./routes/viewRoute');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -23,11 +25,10 @@ app.use('/api/v1/employees', employeeRouter);
 app.use('/api/v1/courses', courseRouter);
 app.use('/', viewRouter);
 
-app.all('*', (req, res) => {
-	res.status(404).json({
-		status: 'fail',
-		message: `Can't find ${req.originalUrl} on this server`
-	});
-})
+app.all('*', (req, res, next) => {
+	next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+app.use(globalErrorHandler);
 
 module.exports = app;
