@@ -8,6 +8,8 @@ const app = express();
 const studentsRouter = require('./routes/studentsRoute');
 const employeeRouter = require('./routes/employeeRoute');
 const courseRouter = require('./routes/courseRoute');
+const systemSettingRouter = require('./routes/systemSettingRoute');
+
 const viewRouter = require('./routes/viewRoute');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -25,6 +27,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/v1/students', studentsRouter);
 app.use('/api/v1/employees', employeeRouter);
 app.use('/api/v1/courses', courseRouter);
+app.use('/api/v1/system_settings', systemSettingRouter);
 app.use('/', viewRouter);
 
 app.all('*', (req, res, next) => {
