@@ -1,7 +1,8 @@
 const path = require('path');
-const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 const compression = require('compression');
+const express = require('express');
 const app = express();
 
 const studentsRouter = require('./routes/studentsRoute');
@@ -11,6 +12,7 @@ const viewRouter = require('./routes/viewRoute');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
+app.use(cors);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(compression());
