@@ -24,7 +24,8 @@ exports.getSystemSetting = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSystemSetting = catchAsync(async (req, res, next) => {
-	const systemSettings = await SystemSetting.findByIdAndUpdate({}, req.body, {
+	
+	const systemSettings = await SystemSetting.updateOne({}, req.body, {
 		new: true,
 		runValidators: true
 	});
