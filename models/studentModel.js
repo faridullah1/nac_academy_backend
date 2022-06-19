@@ -68,8 +68,8 @@ function validateStudent(course) {
 		mobileNo: Joi.string().required().min(11).max(11),
 		cnic: Joi.string().required().min(13).max(13),
 		course: Joi.required(),
-		photo: Joi.string(),
-		address: Joi.string()
+		photo: Joi.string().allow(null),
+		address: Joi.string().allow(null)
 	});
 
 	return schema.validate(course);
