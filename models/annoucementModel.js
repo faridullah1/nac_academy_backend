@@ -1,5 +1,5 @@
-
 const mongoose = require('mongoose');
+
 const annoucementSchema = mongoose.Schema({
 	title: {
 		type: String,
@@ -23,7 +23,7 @@ const annoucementSchema = mongoose.Schema({
 		default: false
 	},
 	expiryDate: {
-		type: Date,
+		type: Number,
 		required: [true, 'Expiry Date is required']
 	},
 	createdAt: {
@@ -34,4 +34,4 @@ const annoucementSchema = mongoose.Schema({
 
 const Annoucement = mongoose.model('Annoucement', annoucementSchema);
 
-module.exports = Annoucement;
+exports.Annoucement = Annoucement;
