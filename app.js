@@ -9,7 +9,7 @@ const studentsRouter = require('./routes/studentsRoute');
 const employeeRouter = require('./routes/employeeRoute');
 const courseRouter = require('./routes/courseRoute');
 const systemSettingRouter = require('./routes/systemSettingRoute');
-const annoucementsRouter = require('./routes/annoucementRoute');
+const announcementsRouter = require('./routes/announcementRoute');
 
 const viewRouter = require('./routes/viewRoute');
 const AppError = require('./utils/appError');
@@ -29,7 +29,7 @@ app.use('/api/v1/students', studentsRouter);
 app.use('/api/v1/employees', employeeRouter);
 app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/system_settings', systemSettingRouter);
-app.use('/api/v1/annoucements', annoucementsRouter);
+app.use('/api/v1/announcements', announcementsRouter);
 app.use('/', viewRouter);
 
 app.all('*', (req, res, next) => {

@@ -1,4 +1,4 @@
-const { Annoucement } = require('../models/annoucementModel');
+const { Announcement } = require('../models/announcementModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
@@ -28,12 +28,12 @@ const upload = multer({
 
 exports.uploadImage = upload.single('image');
 
-exports.createAnnoucement = catchAsync(async (req, res, next) => {
+exports.createAnnouncement = catchAsync(async (req, res, next) => {
 	if (req.file) {
 		req.body.image = req.file.filename;
 	}
 
-	const accouncement = await Annoucement.create(req.body);
+	const accouncement = await Announcement.create(req.body);
 
 	res.status(201).json({
 		status: 'success',
@@ -43,18 +43,18 @@ exports.createAnnoucement = catchAsync(async (req, res, next) => {
 	});
 });
 
-exports.getAllAnnoucements = catchAsync(async (req, res, next) => {
+exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
 	// Build Query
-	const features = new APIFeatures(Annoucement.find(), req.query).filter().sort().limitFields().paginate();
+	const features = new APIFeatures(Announcement.find(), req.query).filter().sort().limitFields().paginate();
 
 	// Execute Query
-	const annoucements = await features.query;
+	const announcements = await features.query;
 
 	res.status(200).json({
 		status: 'success',
-		records: await Annoucement.count(),
+		records: await Announcement.count(),
 		data: {
-			annoucements
+			announcements
 		}
 	});
 });

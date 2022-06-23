@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const annoucementSchema = mongoose.Schema({
+const announcementSchema = mongoose.Schema({
 	title: {
 		type: String,
 		required: [true, 'title is required'],
@@ -32,6 +32,6 @@ const annoucementSchema = mongoose.Schema({
 	}
 });
 
-const Annoucement = mongoose.model('Annoucement', annoucementSchema);
+const Announcement = mongoose.model('Announcement', announcementSchema);
 
-exports.Annoucement = Annoucement;
+exports.Announcement = Announcement;
