@@ -50,6 +50,13 @@ exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
 	// Execute Query
 	const announcements = await features.query;
 
+	// Add base url to each image if exists;
+	for (let rec of announcements) {
+		if (rec.image) {
+			rec.image = `${req.get('host')}/assets/images/${rec.image}`;
+		}
+	}
+
 	res.status(200).json({
 		status: 'success',
 		records: await Announcement.count(),
