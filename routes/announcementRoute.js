@@ -6,4 +6,7 @@ router.route('/')
 	.get(announcementsController.getAllAnnouncements)
 	.post(announcementsController.uploadImage, announcementsController.createAnnouncement);
 
+router.route('/:id')
+	.get(announcementsController.getAnnouncement)
+
 module.exports = router;
