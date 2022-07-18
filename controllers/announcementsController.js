@@ -2,6 +2,8 @@ const { Announcement } = require('../models/announcementModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
+const aws = require('aws-sdk');
+const fs = require('fs');
 
 const multerStorage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -21,24 +23,50 @@ const multerFilter = (req, file, cb) => {
 	}
 }
 
-const upload = multer({
+const upload2 = multer({
 	storage: multerStorage,
 	fileFilter: multerFilter
 });
 
+const upload = multer({ dest: 'temp/', limits: { fieldSize: 8 * 1024 * 1024 } });
+
 exports.uploadImage = upload.single('image');
 
 exports.createAnnouncement = catchAsync(async (req, res, next) => {
-	if (req.file) {
-		req.body.image = req.file.filename;
-	}
+	aws.config.setPromisesDependency();
+    aws.config.update({
+		accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+		secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+      	region: process.env.REGION
+    });
 
-	const accouncement = await Announcement.create(req.body);
+    const s3 = new aws.S3();
 
-	res.status(201).json({
-		status: 'success',
-		data: {
-			accouncement
+	const params = {
+		ACL: 'public-read',
+		Bucket: process.env.S3_BUCKET,
+		Body: fs.createReadStream(req.file.path),
+		Key: `announcements/${req.file.originalname}`
+	  };
+  
+	s3.upload(params, async (err, data) => {
+		if (err) {
+		  	console.log('Error occured while trying to upload to S3 bucket', err);
+		}
+  
+		if (data) {
+			fs.unlinkSync(req.file.path); 			// Empty temp folder
+			const locationUrl = data.Location;
+			req.body.image = locationUrl;
+
+			const accouncement = await Announcement.create(req.body);
+
+			res.status(201).json({
+				status: 'success',
+				data: {
+					accouncement
+				}
+			});
 		}
 	});
 });
@@ -51,11 +79,11 @@ exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
 	const announcements = await features.query;
 
 	// Add base url to each image if exists;
-	for (let rec of announcements) {
-		if (rec.image) {
-			rec.image = `${req.get('host')}/assets/images/${rec.image}`;
-		}
-	}
+	// for (let rec of announcements) {
+	// 	if (rec.image) {
+	// 		rec.image = `${req.get('host')}/assets/images/${rec.image}`;
+	// 	}
+	// }
 
 	res.status(200).json({
 		status: 'success',
