@@ -8,7 +8,7 @@ router.route('/')
 
 router.route('/:id')
 	.get(announcementsController.getAnnouncement)
-	.patch(announcementsController.updateAnnouncement)
+	.patch(announcementsController.uploadImage, announcementsController.updateAnnouncement)
 	.delete(announcementsController.deleteAnnouncement)
 
 module.exports = router;

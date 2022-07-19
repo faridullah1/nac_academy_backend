@@ -24,9 +24,9 @@ exports.createAnnouncement = catchAsync(async (req, res, next) => {
 		const imageURL = await uploadToS3(req.file, 'announcements');
 		req.body.image = imageURL;
 		
-		insertAnnouncement(req, res);
+		insertDoc(req, res);
 	}
-	else insertAnnouncement(req, res);
+	else insertDoc(req, res);
 });
 
 exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
@@ -57,17 +57,12 @@ exports.getAnnouncement = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAnnouncement = catchAsync(async (req, res, next) => {
-	const announcement = await Announcement.findByIdAndUpdate(req.params.id, req.body, {
-		new: true,
-		runValidators: true
-	});
-
-	res.status(200).json({
-		status: 'success',
-		data: {
-			announcement
-		}
-	});
+	if (req.file) {
+		const imageURL = await uploadToS3(req.file, 'announcements');
+		req.body.image = imageURL;
+		updateDoc(req, res);
+	}
+	else updateDoc(req, res);
 });
 
 exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
@@ -81,13 +76,27 @@ exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
 	});
 });
 
-insertAnnouncement = async (req, res) => {
+insertDoc = async (req, res) => {
 	const accouncement = await Announcement.create(req.body);
 	
 	res.status(201).json({
 		status: 'success',
 		data: {
 			accouncement
+		}
+	});
+}
+
+updateDoc = async (req, res) => {
+	const announcement = await Announcement.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			announcement
 		}
 	});
 }
