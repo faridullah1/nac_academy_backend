@@ -104,3 +104,28 @@ exports.getAnnouncement = catchAsync(async (req, res, next) => {
 		}
 	});
 });
+
+exports.updateAnnouncement = catchAsync(async (req, res, next) => {
+	const announcement = await Announcement.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true
+	});
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			announcement
+		}
+	});
+});
+
+exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
+	const announcement = await Announcement.findByIdAndDelete(req.params.id);
+
+	res.status(204).json({
+		status: 'success',
+		data: {
+			announcement
+		}
+	});
+});
