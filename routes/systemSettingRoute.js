@@ -5,5 +5,5 @@ const systemSettingController = require('../controllers/systemSettingController'
 router.route('/')
 	.get(systemSettingController.getSystemSetting)
 	.post(systemSettingController.createSystemSetting)
-	.patch(systemSettingController.updateSystemSetting);
+	.patch(systemSettingController.uploadImage, systemSettingController.updateSystemSetting);
 module.exports = router;
