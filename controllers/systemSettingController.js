@@ -17,17 +17,27 @@ const upload = multer({
 });
 
 exports.uploadImage = upload.fields([
-	{
-		name: 'principleImage',
-		maxCount: 1
-	},
-	{
-		name: 'introductionImage',
-		maxCount: 1
-	}
+	{ name: 'logo' },
+	{ name: 'principleImage' },
+	{ name: 'introductionImage' }	
 ]);
 
 exports.createSystemSetting = catchAsync(async (req, res, next) => {
+	// First upload all images;
+	const uploadesArray = [];
+	for (let key in req.files) {
+		uploadesArray.push(uploadToS3(req.files[key][0], 'system-settings'));
+	}
+
+	const images = await Promise.all(uploadesArray);
+
+	// Set image url with respective column name in database;
+	let index = 0;
+	for (let key in req.files) {
+		req.body[key] = images[index];
+		index ++;
+	} 
+
 	const systemSettings = await SystemSetting.create(req.body);
 
 	res.status(201).json({
@@ -50,31 +60,21 @@ exports.getSystemSetting = catchAsync(async (req, res, next) => {
 });
 
 exports.updateSystemSetting = catchAsync(async (req, res, next) => {
-	const noOfFiles = Object.keys(req.files).length;
-	if (noOfFiles === 2) {
-		const principleImage = await uploadToS3(req.files['principleImage'][0], 'system-settings');
-		req.body.principleImage = principleImage;
-		
-		const introductionImage = await uploadToS3(req.files['introductionImage'][0], 'system-settings');
-		req.body.introductionImage = introductionImage;
-
-		updateDocument(req, res);
+	// First upload all images;
+	const uploadesArray = [];
+	for (let key in req.files) {
+		uploadesArray.push(uploadToS3(req.files[key][0], 'system-settings'));
 	}
-	else if (noOfFiles === 1) {
-		if (req.files.principleImage) uploadFile('principleImage', req, res);
-		else uploadFile('introductionImage', req, res);
+
+	const images = await Promise.all(uploadesArray);
+
+	// Set image url with respective column name in database;
+	let index = 0;
+	for (let key in req.files) {
+		req.body[key] = images[index];
+		index ++;
 	}
-	else updateDocument(req, res);
-});
 
-uploadFile = async (fileKey, req, res) => {
-	const image = await uploadToS3(req.files[fileKey][0], 'system-settings');
-	req.body[fileKey] = image;
-
-	updateDocument(req, res);
-}
-
-updateDocument = async (req, res) => {
 	const systemSettings = await SystemSetting.updateOne({}, req.body, {
 		new: true,
 		runValidators: true
@@ -86,4 +86,4 @@ updateDocument = async (req, res) => {
 			systemSettings
 		}
 	});
-}
+});
