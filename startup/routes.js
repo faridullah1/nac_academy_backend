@@ -5,6 +5,7 @@ const systemSettingRouter = require('../routes/systemSettingRoute');
 const announcementsRouter = require('../routes/announcementRoute');
 const queriesRouter = require('../routes/userQueryRoute');
 const userRouter = require('../routes/userRoute');
+const authRouter = require('../routes/authRoute');
 
 const viewRouter = require('../routes/viewRoute');
 const AppError = require('../utils/appError');
@@ -18,6 +19,7 @@ module.exports = (app) => {
 	app.use('/api/v1/announcements', announcementsRouter);
 	app.use('/api/v1/queries', queriesRouter);
 	app.use('/api/v1/users', userRouter);
+	app.use('/api/v1/auth/login', authRouter);
 	app.use('/', viewRouter);
 
 	app.all('*', (req, res, next) => {
