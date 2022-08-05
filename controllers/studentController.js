@@ -1,5 +1,6 @@
 const { Student, validate } = require('../models/studentModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllStudents = catchAsync(async (req, res, next) => {
@@ -28,13 +29,7 @@ exports.getStudent = catchAsync(async (req, res, next) => {
 
 exports.createStudent = catchAsync(async (req, res, next) => {
 	const { error } = validate(req.body);
-
-	if (error) {
-		return res.status(400).json({
-			status: 'fail',
-			message: error.details[0].message
-		});
-	}
+	if (error) return next(new AppError(error.message, 400));
 
 	const student = await Student.create(req.body);
 

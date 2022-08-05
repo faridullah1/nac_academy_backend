@@ -1,10 +1,11 @@
 const { UserQuery, validate } = require('../models/userQueryModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createQuery = catchAsync(async (req, res, next) => {
 	const { error } = validate(req.body);
-	if (error) return res.status(400).send(error.message);
+	if (error) return next(new AppError(error.message, 400))
 
 	const userQuery = new UserQuery({
 		name: req.body.name,
@@ -42,7 +43,7 @@ exports.getAllQueries = catchAsync(async (req, res, next) => {
 exports.getQuery = catchAsync(async (req, res, next) => {
 	const query = await UserQuery.findById(req.params.id);
 
-	if (!query) return res.status(400).send('User query with the given ID was not found.');
+	if (!query) return next(new AppError('User with the given ID was not found.', 400))
 
 	res.status(200).json({
 		status: 'success',
@@ -56,7 +57,7 @@ exports.getQuery = catchAsync(async (req, res, next) => {
 exports.deleteQuery = catchAsync(async (req, res, next) => {
 	const query = await UserQuery.findByIdAndDelete(req.params.id);
 
-	if (!query) return res.status(400).send('User query with the given ID was not found.');
+	if (!query) return next(new AppError('User with the given ID was not found.', 400))
 
 	res.status(204).json({
 		status: 'success',

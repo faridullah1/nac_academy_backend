@@ -1,17 +1,18 @@
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const { User } = require("../models/userModel");
+const AppError = require('../utils/appError');
 const catchAsync = require("../utils/catchAsync");
 
 exports.login = catchAsync(async (req, res, next) => {
 	const { error } = validateAuth(req.body);
-	if (error) return res.status(400).send(error.message);
+	if (error) return next(new AppError(error.message, 400));
 
 	let user = await User.findOne({ email: req.body.email});
-	if (!user) return res.status(401).send('email or password is incorrect.');
+	if (!user) return next(new AppError('email or password is incorrect', 401));
 
 	const isValid = await bcrypt.compare(req.body.password, user.password);
-	if (!isValid) return res.status(401).send('email or password is incorrect.');
+	if (!isValid) return next(new AppError('email or password is incorrect', 401));
 	
 	const token = user.generateToken();
 	res.status(200).json({

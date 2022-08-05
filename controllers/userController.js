@@ -1,14 +1,15 @@
 const bycrpt = require('bcrypt');
 const { User, validate } = require('../models/userModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createUser = catchAsync(async (req, res, next) => {
 	const { error } = validate(req.body);
-	if (error) return res.status(400).send(error.message);
+	if (error) return next(new AppError(error.message, 400));
 
 	let user = await User.findOne({ email: req.body.email });
-	if (user) return res.status(400).send('User already exists.');
+	if (user) return next(new AppError('User already exists', 400));
 
 	user = new User({
 		name: req.body.name,
@@ -49,7 +50,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 exports.getUser = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.params.id).select('-password');
 
-	if (!user) return res.status(400).send('User with the given ID was not found.');
+	if (!user) return next(new AppError('User with the given ID was not found.', 400));
 
 	res.status(200).json({
 		status: 'success',
@@ -63,7 +64,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
 	const user = await User.findByIdAndDelete(req.params.id);
 
-	if (!user) return res.status(400).send('User with the given ID was not found.');
+	if (!user) return next(new AppError('User with the given ID was not found.', 400))
 
 	res.status(204).json({
 		status: 'success',
