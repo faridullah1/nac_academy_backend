@@ -18,7 +18,7 @@ class APIFeatures {
 
 	sort(sortOptions) {
 		let sortBy = sortOptions || this.queryString.sort;
-		
+
 		if (sortBy) {
 			sortBy = sortBy.split(',').join(' ');
 			this.query = this.query.sort(sortBy);
@@ -27,10 +27,12 @@ class APIFeatures {
 		return this;
 	}
 
-	limitFields() {
-		if (this.queryString.fields) {
-			const fields = this.queryString.fields.split(',').join(' ');
-			this.query = this.query.select(fields);
+	limitFields(fields) {
+		let requestedFields = fields || this.queryString.fields;
+
+		if (requestedFields) {
+			requestedFields = requestedFields.split(',').join(' ');
+			this.query = this.query.select(requestedFields);
 		}
 		else {
 			this.query = this.query.select('-__v');
