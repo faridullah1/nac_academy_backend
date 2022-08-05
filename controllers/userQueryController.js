@@ -10,7 +10,7 @@ exports.createQuery = catchAsync(async (req, res, next) => {
 		name: req.body.name,
 		email: req.body.email,
 		phone: req.body.phone,
-		comments: req.body.phone
+		comments: req.body.comments
 	});
 
 	await userQuery.save();
