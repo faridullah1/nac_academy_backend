@@ -25,7 +25,7 @@ exports.createQuery = catchAsync(async (req, res, next) => {
 
 exports.getAllQueries = catchAsync(async (req, res, next) => {
 	// Build Query
-	const features = new APIFeatures(UserQuery.find(), req.query).filter().sort().limitFields().paginate();
+	const features = new APIFeatures(UserQuery.find(), req.query).filter().sort('-_id').limitFields().paginate();
 
 	// Execute Query
 	const queries = await features.query;
