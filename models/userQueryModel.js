@@ -13,14 +13,12 @@ const userQuerySchema = mongoose.Schema({
 		required: [true, 'Email is required'],
 		minlength: 10,
 		maxlenght: 255,
-		unique: true,
 	},
 	phone: {
 		type: String,
 		required: [true, 'phone is required'],
 		minlength: 11,
 		maxlenght: 11,
-		unique: true
 	},
 	comments: {
 		type: String,
