@@ -5,6 +5,8 @@ const { auth } = require('../middleware/auth');
 
 router.use(auth);
 
+router.route('/me').get(userController.userInfo);
+
 router.route('/')
 	.get(userController.getAllUsers)
 	.post(userController.createUser);

@@ -4,6 +4,17 @@ const APIFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+exports.userInfo = catchAsync(async (req, res, next) => {
+	const user = await User.findOne({ _id: req.user._id }).select('-password');
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			user
+		}
+	});
+});
+
 exports.createUser = catchAsync(async (req, res, next) => {
 	const { error } = validate(req.body);
 	if (error) return next(new AppError(error.message, 400));
