@@ -11,7 +11,7 @@ exports.getAllEmployees = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		records: await Employee.count(),
+		records: employees.length,
 		data: {
 			employees
 		}

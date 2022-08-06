@@ -9,7 +9,7 @@ exports.getAllStudents = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		records: await Student.count(),
+		records: await students.length,
 		data: {
 			students
 		}

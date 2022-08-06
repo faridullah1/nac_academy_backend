@@ -75,7 +75,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		records: await User.count(),
+		records: users.length,
 		data: {
 			users
 		}
