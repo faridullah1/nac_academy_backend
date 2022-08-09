@@ -24,7 +24,7 @@ const upload = multer({
 exports.uploadImage = upload.single('photo');
 
 exports.me = catchAsync(async (req, res, next) => {
-	const user = await User.findOne({ _id: req.user._id }).select('-password');
+	const user = await User.findOne({ _id: req.user._id });
 
 	res.status(200).json({
 		status: 'success',
@@ -68,7 +68,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
 	// Build Query
-	const features = new APIFeatures(User.find(), req.query).filter().sort('-_id').limitFields('-password').paginate();
+	const features = new APIFeatures(User.find(), req.query).filter().sort().limitFields().paginate();
 
 	// Execute Query
 	const users = await features.query;
@@ -83,7 +83,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-	const user = await User.findById(req.params.id).select('-password');
+	const user = await User.findById(req.params.id);
 
 	if (!user) return next(new AppError('User with the given ID was not found.', 400));
 
@@ -114,7 +114,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 		name: req.body.name,
 		email: req.body.email,
 		photo: req.body.photo
-	}, { new: true }).select('-password');
+	}, { new: true });
 
 	if (!user) return next(new AppError('User with the given ID was not found.', 400))
 

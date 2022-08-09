@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
 		type: String,
 		require: [true, 'Password is required'],
 		minlength: 10,
-		maxlenght: 55
+		maxlenght: 55,
+		select: false
 	},
 	photo: String,
 	createdAt: {
