@@ -8,7 +8,7 @@ exports.login = catchAsync(async (req, res, next) => {
 	const { error } = validateAuth(req.body);
 	if (error) return next(new AppError(error.message, 400));
 
-	let user = await User.findOne({ email: req.body.email});
+	let user = await User.findOne({ email: req.body.email}).select('password');
 	if (!user) return next(new AppError('email or password is incorrect', 401));
 
 	const isValid = await bcrypt.compare(req.body.password, user.password);
