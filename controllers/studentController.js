@@ -18,6 +18,8 @@ exports.getAllStudents = catchAsync(async (req, res, next) => {
 
 exports.getStudent = catchAsync(async (req, res, next) => {
 	const student = await Student.findById(req.params.id);
+
+	if (!student) return next(new AppError('Student with the given ID was not found.', 404));
 	
 	res.status(200).json({
 		status: 'success',
@@ -47,6 +49,8 @@ exports.updateStudent = catchAsync(async (req, res, next) => {
 		runValidators: true
 	});
 
+	if (!student) return next(new AppError('Student with the given ID was not found.', 404));
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -57,6 +61,8 @@ exports.updateStudent = catchAsync(async (req, res, next) => {
 
 exports.deleteStudent = catchAsync(async (req, res, next) => {
 	const student = await Student.findByIdAndDelete(req.params.id);
+
+	if (!student) return next(new AppError('Student with the given ID was not found.', 404));
 
 	res.status(204).json({
 		status: 'success',

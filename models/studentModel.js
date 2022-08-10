@@ -67,7 +67,7 @@ function validateStudent(course) {
 		dateOfBirth: Joi.date().required(),
 		mobileNo: Joi.string().required().min(11).max(11),
 		cnic: Joi.string().required().min(13).max(13),
-		course: Joi.required(),
+		courseId: Joi.required(),
 		photo: Joi.string().allow(null),
 		address: Joi.string().allow(null)
 	});

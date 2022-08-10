@@ -43,7 +43,7 @@ exports.getAllQueries = catchAsync(async (req, res, next) => {
 exports.getQuery = catchAsync(async (req, res, next) => {
 	const query = await UserQuery.findById(req.params.id);
 
-	if (!query) return next(new AppError('User with the given ID was not found.', 400))
+	if (!query) return next(new AppError('User query with the given ID was not found.', 404))
 
 	res.status(200).json({
 		status: 'success',
@@ -57,7 +57,7 @@ exports.getQuery = catchAsync(async (req, res, next) => {
 exports.deleteQuery = catchAsync(async (req, res, next) => {
 	const query = await UserQuery.findByIdAndDelete(req.params.id);
 
-	if (!query) return next(new AppError('User with the given ID was not found.', 400))
+	if (!query) return next(new AppError('User query with the given ID was not found.', 404))
 
 	res.status(204).json({
 		status: 'success',

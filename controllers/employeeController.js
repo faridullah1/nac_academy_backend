@@ -20,6 +20,8 @@ exports.getAllEmployees = catchAsync(async (req, res, next) => {
 
 exports.getEmployee = catchAsync(async (req, res, next) => {
 	const employee = await Employee.findById(req.params.id);
+
+	if (!employee) return next(new AppError('Employee with the given ID was not found.', 404));
 	
 	res.status(200).json({
 		status: 'success',
@@ -46,6 +48,8 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
 		runValidators: true
 	});
 
+	if (!employee) return next(new AppError('Employee with the given ID was not found.', 404));
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -56,6 +60,8 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
 
 exports.deleteEmployee = catchAsync(async (req, res, next) => {
 	const employee = await Employee.findByIdAndDelete(req.params.id);
+
+	if (!employee) return next(new AppError('Employee with the given ID was not found.', 404));
 
 	res.status(204).json({
 		status: 'success',

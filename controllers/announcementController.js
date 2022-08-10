@@ -48,6 +48,8 @@ exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
 exports.getAnnouncement = catchAsync(async (req, res, next) => {
 	const announcement = await Announcement.findById(req.params.id);
 	
+	if (!announcement) return next(new AppError('Announcement with the given ID was not found.', 404));
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -67,6 +69,8 @@ exports.updateAnnouncement = catchAsync(async (req, res, next) => {
 
 exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
 	const announcement = await Announcement.findByIdAndDelete(req.params.id);
+
+	if (!announcement) return next(new AppError('Announcement with the given ID was not found.', 404));
 
 	res.status(204).json({
 		status: 'success',
