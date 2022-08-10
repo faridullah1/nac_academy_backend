@@ -64,7 +64,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
 
 exports.deleteCourse = catchAsync(async (req, res, next) => {
 	const students = await Student.find({ course: ObjectId(req.params.id)});
-	if (students.length > 0) return next(new AppError('Can not delete course, already have students.'));
+	if (students.length > 0) return next(new AppError('Can not delete this course, already have students.', 400));
 
 	const course = await Course.findByIdAndDelete(req.params.id);
 
