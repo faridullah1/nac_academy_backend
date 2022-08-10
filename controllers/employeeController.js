@@ -1,5 +1,9 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+const { Course } = require('../models/courseModel');
 const Employee = require('../models/employeeModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllEmployees = catchAsync(async (req, res, next) => {
@@ -59,6 +63,12 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteEmployee = catchAsync(async (req, res, next) => {
+	const courses = await Course.find({ teacher: ObjectId(req.params.id)});
+
+	console.log('No of courses =', courses.length);
+
+	if (courses.length > 0) return next(new AppError('Can not delete this teacher, already have courses.', 400));
+
 	const employee = await Employee.findByIdAndDelete(req.params.id);
 
 	if (!employee) return next(new AppError('Employee with the given ID was not found.', 404));
