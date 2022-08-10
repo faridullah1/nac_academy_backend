@@ -23,7 +23,8 @@ const systemSettingsSchema = mongoose.Schema({
 	email: {
 		type: String,
 		required: [true, 'Email is required'],
-		unique: [true, 'Email must be unique']
+		unique: [true, 'Email must be unique'],
+		lowercase: true
 	},
 	dateSheet: String,
 	principleImage: {

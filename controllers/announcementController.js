@@ -3,6 +3,7 @@ const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const multer = require('multer');
 const uploadToS3 = require('../utils/uploadToS3');
+const AppError = require('../utils/appError');
 
 const multerFilter = (req, file, cb) => {
 	if (file.mimetype.startsWith('image')) {
@@ -21,12 +22,23 @@ exports.uploadImage = upload.single('image');
 
 exports.createAnnouncement = catchAsync(async (req, res, next) => {
 	if (req.file) {
-		const imageURL = await uploadToS3(req.file, 'announcements');
-		req.body.image = imageURL;
-		
-		insertDoc(req, res);
+		req.body.image = await uploadToS3(req.file, 'announcements');
 	}
-	else insertDoc(req, res);
+	
+	const accouncement = await Announcement.create({
+		title: req.body.title,
+		description: req.body.description,
+		image: req.body.image,
+		isMain: req.body.isMain,
+		expiryDate: req.body.expiryDate
+	});
+	
+	res.status(201).json({
+		status: 'success',
+		data: {
+			accouncement
+		}
+	});
 });
 
 exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
@@ -60,11 +72,22 @@ exports.getAnnouncement = catchAsync(async (req, res, next) => {
 
 exports.updateAnnouncement = catchAsync(async (req, res, next) => {
 	if (req.file) {
-		const imageURL = await uploadToS3(req.file, 'announcements');
-		req.body.image = imageURL;
-		updateDoc(req, res);
+		req.body.image = await uploadToS3(req.file, 'announcements');
 	}
-	else updateDoc(req, res);
+
+	const announcement = await Announcement.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true
+	});
+
+	if (!announcement) return next(new AppError('Announcement with the given ID was not found.', 404));
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			announcement
+		}
+	});
 });
 
 exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
@@ -79,28 +102,3 @@ exports.deleteAnnouncement = catchAsync(async (req, res, next) => {
 		}
 	});
 });
-
-insertDoc = async (req, res) => {
-	const accouncement = await Announcement.create(req.body);
-	
-	res.status(201).json({
-		status: 'success',
-		data: {
-			accouncement
-		}
-	});
-}
-
-updateDoc = async (req, res) => {
-	const announcement = await Announcement.findByIdAndUpdate(req.params.id, req.body, {
-		new: true,
-		runValidators: true
-	});
-
-	res.status(200).json({
-		status: 'success',
-		data: {
-			announcement
-		}
-	});
-}
