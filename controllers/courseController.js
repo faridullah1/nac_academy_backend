@@ -1,5 +1,9 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const { Course } = require('../models/courseModel');
+const { Student } = require('../models/studentModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createCourse = catchAsync(async (req, res, next) => {
@@ -32,6 +36,8 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
 exports.getCourse = catchAsync(async (req, res, next) => {
 	const course = await Course.findById(req.params.id);
 	
+	if (!course) return next(new AppError('Course with the given ID was not found.', 404));
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -46,6 +52,8 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
 		runValidators: true
 	});
 
+	if (!course) return next(new AppError('Course with the given ID was not found.', 404));
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -55,12 +63,17 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteCourse = catchAsync(async (req, res, next) => {
+	const students = await Student.find({ course: ObjectId(req.params.id)});
+	if (students.length > 0) return next(new AppError('Can not delete course, already have students.'));
+
 	const course = await Course.findByIdAndDelete(req.params.id);
+
+	if (!course) return next(new AppError('Course with the given ID was not found.', 404));
 
 	res.status(204).json({
 		status: 'success',
 		data: {
-			course
+			course: 'TESTING'
 		}
 	});
 });
