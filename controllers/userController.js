@@ -1,4 +1,3 @@
-const bycrpt = require('bcrypt');
 const Joi = require('joi');
 const multer = require('multer');
 
@@ -44,16 +43,21 @@ exports.createUser = catchAsync(async (req, res, next) => {
 	user = new User({
 		name: req.body.name,
 		email: req.body.email,
+		password: req.body.password
 	});
 
-	const salt = await bycrpt.genSalt(10);
-	user.password = await bycrpt.hash(req.body.password, salt);
+	/*  We can also use Document middleware of the User model to do encryption related stuff.
+		There is a philosophy of fat model and thin controller which means we should left all
+		the heavy work to the model and keep the controller as little as possible;
 
+		const salt = await bycrpt.genSalt(10);
+		user.password = await bycrpt.hash(req.body.password, salt);
+	*/
 	if (req.file) {
 		const imageURL = await uploadToS3(req.file, 'users');
 		user.photo = imageURL;
 	}
-	
+
 	await user.save();
 
 	const token = user.generateToken()

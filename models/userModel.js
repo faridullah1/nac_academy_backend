@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
+const bycrpt = require('bcrypt');
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
@@ -29,6 +30,17 @@ const userSchema = mongoose.Schema({
 		type: Date,
 		default: Date.now()
 	}
+});
+
+userSchema.pre('save', async function(next) {
+	// Only run this function if password is modified;
+	if (!this.isModified('password')) return next();
+
+	// Hash the password with cost of 12;
+	this.password = await bycrpt.hash(this.password, 12);
+
+	console.log('Password =', this.password);
+	next();
 });
 
 userSchema.methods.generateToken = function() {
