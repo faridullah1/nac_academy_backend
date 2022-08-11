@@ -39,7 +39,6 @@ userSchema.pre('save', async function(next) {
 	// Hash the password with cost of 12;
 	this.password = await bycrpt.hash(this.password, 12);
 
-	console.log('Password =', this.password);
 	next();
 });
 

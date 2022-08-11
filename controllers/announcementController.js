@@ -50,7 +50,7 @@ exports.getAllAnnouncements = catchAsync(async (req, res, next) => {
 
 	return res.status(200).json({
 		status: 'success',
-		records: announcements.length,
+		records: await Announcement.count(),
 		data: {
 			announcements
 		}

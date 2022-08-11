@@ -62,8 +62,8 @@ studentSchema.pre(/^find/, function(next) {
 
 function validateStudent(course) {
 	const schema = Joi.object({
-		fullName: Joi.string().required().min(5).max(55),
-		fatherName: Joi.string().required().min(5).max(55),
+		fullName: Joi.string().required().min(3).max(55),
+		fatherName: Joi.string().required().min(3).max(55),
 		dateOfBirth: Joi.date().required(),
 		mobileNo: Joi.string().required().min(11).max(11),
 		cnic: Joi.string().required().min(13).max(13),

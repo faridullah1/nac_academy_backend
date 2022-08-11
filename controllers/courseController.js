@@ -26,7 +26,7 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		records: courses.length,
+		records: await Course.count(),
 		data: {
 			courses
 		}

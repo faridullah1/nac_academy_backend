@@ -33,7 +33,7 @@ exports.getAllQueries = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'success',
-		records: queries.length,
+		records: await UserQuery.count(),
 		data: {
 			queries
 		}
