@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const studentController = require('../controllers/studentController');
-const { auth } = require('../middleware/auth');
+const { protect } = require('../controllers/authController');
 
-router.use(auth);
+router.use(protect);
 
 router.route('/')
 	.get(studentController.getAllStudents)

@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const userQueryController = require('../controllers/userQueryController');
-const { auth } = require('../middleware/auth');
+const { protect } = require('../controllers/authController');
 
 router.route('/')
-	.get(auth, userQueryController.getAllQueries)
+	.get(protect, userQueryController.getAllQueries)
 	.post(userQueryController.createQuery);
 
 router.route('/:id')
-	.get(auth, userQueryController.getQuery)
-	.delete(auth, userQueryController.deleteQuery)
+	.get(protect, userQueryController.getQuery)
+	.delete(protect, userQueryController.deleteQuery)
 
 module.exports = router;

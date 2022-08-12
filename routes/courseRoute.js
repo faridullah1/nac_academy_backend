@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
-const { auth } = require('../middleware/auth');
+const { protect } = require('../controllers/authController');
 
 router.route('/')
 	.get(courseController.getAllCourses)
-	.post(auth, courseController.createCourse);
+	.post(protect, courseController.createCourse);
 
 router.route('/:id')
 	.get(courseController.getCourse)
-	.patch(auth, courseController.updateCourse)
-	.delete(auth, courseController.deleteCourse);
+	.patch(protect, courseController.updateCourse)
+	.delete(protect, courseController.deleteCourse);
 
 module.exports = router;

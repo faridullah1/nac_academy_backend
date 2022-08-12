@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const announcementsController = require('../controllers/announcementController');
-const { auth } = require('../middleware/auth');
+const { protect } = require('../controllers/authController');
 
 router.route('/')
 	.get(announcementsController.getAllAnnouncements)
-	.post([auth, announcementsController.uploadImage], announcementsController.createAnnouncement);
+	.post([protect, announcementsController.uploadImage], announcementsController.createAnnouncement);
 
 router.route('/:id')
 	.get(announcementsController.getAnnouncement)
-	.patch([auth, announcementsController.uploadImage], announcementsController.updateAnnouncement)
-	.delete(auth, announcementsController.deleteAnnouncement)
+	.patch([protect, announcementsController.uploadImage], announcementsController.updateAnnouncement)
+	.delete(protect, announcementsController.deleteAnnouncement)
 
 module.exports = router;
