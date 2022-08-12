@@ -3,14 +3,13 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { protect } = require('../controllers/authController');
 
-router.use(protect);
-
-router.route('/me').get(userController.me);
+router.route('/me').get(protect, userController.me);
 
 router.route('/')
-	.get(userController.getAllUsers)
+	.get(protect, userController.getAllUsers)
 	.post(userController.uploadImage, userController.createUser);
 
+router.use(protect);
 router.route('/:id')
 	.get(userController.getUser)
 	.patch(userController.uploadImage, userController.updateUser)
