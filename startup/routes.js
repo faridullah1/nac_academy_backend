@@ -7,9 +7,7 @@ const announcementsRouter = require('../routes/announcementRoute');
 const queriesRouter = require('../routes/userQueryRoute');
 const userRouter = require('../routes/userRoute');
 const authRouter = require('../routes/authRoute');
-
-// View route import
-const viewRouter = require('../routes/viewRoute');
+const path = require('path');
 
 // Global Error handling imports
 const AppError = require('../utils/appError');
@@ -27,7 +25,9 @@ module.exports = (app) => {
 	app.use('/api/v1/auth/login', authRouter);
 
 	// Handling View routes
-	app.use('/', viewRouter);
+	app.use('/', (req, res) => {
+		res.sendFile(path.join(__dirname, '../public/index.html'));
+	});
 
 	// Handling unhandled routes
 	app.all('*', (req, res, next) => {
