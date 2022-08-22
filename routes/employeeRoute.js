@@ -7,11 +7,11 @@ router.use(protect);
 
 router.route('/')
 	.get(employeeController.getAllEmployees)
-	.post(employeeController.createEmployee);
+	.post(employeeController.uploadPhoto, employeeController.createEmployee);
 
 router.route('/:id')
 	.get(employeeController.getEmployee)
-	.patch(employeeController.updateEmployee)
+	.patch(employeeController.uploadPhoto, employeeController.updateEmployee)
 	.delete(employeeController.deleteEmployee);
 
 module.exports = router;

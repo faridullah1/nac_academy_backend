@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const employeeSchema = mongoose.Schema({
 	fullName: {
@@ -31,6 +32,12 @@ const employeeSchema = mongoose.Schema({
 		minLength: 11,
 		maxLength: 11
 	},
+	profileSummary: {
+		type: String,
+		required: [true, 'profileSummary is required.'],
+		minLength: 10,
+		maxLength: 255
+	},
 	email: String,
 	photo: String,
 	address: {
@@ -43,4 +50,22 @@ const employeeSchema = mongoose.Schema({
 
 const Employee = mongoose.model('Employee', employeeSchema);
 
-module.exports = Employee;
+function validateEmployee(employee) {
+	const schema = Joi.object({
+		fullName: Joi.string().required().min(3).max(55),
+		gender: Joi.string().required(),
+		qualification: Joi.string().required(),
+		experience: Joi.number().required().min(0).max(50),
+		role: Joi.string(),
+		mobileNo: Joi.string().required().min(11).max(11),
+		profileSummary: Joi.string().required().min(10).max(255),
+		email: Joi.string().email(),
+		photo: Joi.string().allow(null),
+		address: Joi.string().allow(null)
+	});
+
+	return schema.validate(employee);
+}
+
+exports.Employee = Employee;
+exports.validate = validateEmployee;

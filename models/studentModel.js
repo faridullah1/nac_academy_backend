@@ -60,7 +60,7 @@ studentSchema.pre(/^find/, function(next) {
 	next();
 });
 
-function validateStudent(course) {
+function validateStudent(student) {
 	const schema = Joi.object({
 		fullName: Joi.string().required().min(3).max(55),
 		fatherName: Joi.string().required().min(3).max(55),
@@ -72,7 +72,7 @@ function validateStudent(course) {
 		address: Joi.string().allow(null)
 	});
 
-	return schema.validate(course);
+	return schema.validate(student);
 }
 
 const Student = mongoose.model('Student', studentSchema);
