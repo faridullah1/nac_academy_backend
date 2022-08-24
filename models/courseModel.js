@@ -57,9 +57,11 @@ courseSchema.pre(/^find/, function(next) {
 function validateCourse(course) {
 	const schema = Joi.object({
 		name: Joi.string().required().min(3).max(55),
+		teacher: Joi.string().required(),
 		price: Joi.number().required().min(0).max(50000),
 		duration: Joi.string().required(),
 		description: Joi.string().required().min(10).max(1000),
+		outline: Joi.required(),
 		audience: Joi.string().required().min(10).max(500),
 		image: Joi.string()
 	});
