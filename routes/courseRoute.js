@@ -5,11 +5,11 @@ const { protect } = require('../controllers/authController');
 
 router.route('/')
 	.get(courseController.getAllCourses)
-	.post(protect, courseController.createCourse);
+	.post(courseController.uploadImage, protect, courseController.createCourse);
 
 router.route('/:id')
 	.get(courseController.getCourse)
-	.patch(protect, courseController.updateCourse)
+	.patch(courseController.uploadImage, protect, courseController.updateCourse)
 	.delete(protect, courseController.deleteCourse);
 
 module.exports = router;

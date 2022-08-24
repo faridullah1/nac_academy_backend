@@ -1,12 +1,41 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const { Course } = require('../models/courseModel');
+const multer = require('multer');
+
+const { Course, validate } = require('../models/courseModel');
 const { Student } = require('../models/studentModel');
 const APIFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const uploadToS3 = require('../utils/uploadToS3');
+
+const multerFilter = (req, file, cb) => {
+	if (file.mimetype.startsWith('image')) {
+		cb(null, true);
+	} else {
+		cb(new Error('Not an image! please upload only images.'), false);
+	}
+}
+
+const upload = multer({
+	dest: 'temp/',
+	fileFilter: multerFilter,
+});
+
+exports.uploadImage = upload.single('image');
 
 exports.createCourse = catchAsync(async (req, res, next) => {
+	const { error } = validate(req.body);
+	if (error) return next(new AppError(error.message, 400));
+
+	if (req.file) {
+		req.body.image = await uploadToS3(req.file, 'courses');
+	}
+
+	if (typeof req.body.outline === 'string') {
+		req.body.outline = req.body.outline.split(',');
+	}
+
 	const course = await Course.create(req.body);
 
 	res.status(201).json({
@@ -47,6 +76,14 @@ exports.getCourse = catchAsync(async (req, res, next) => {
 });
 
 exports.updateCourse = catchAsync(async (req, res, next) => {
+	if (req.file) {
+		req.body.image = await uploadToS3(req.file, 'courses');
+	}
+
+	if (typeof req.body.outline === 'string') {
+		req.body.outline = req.body.outline.split(',');
+	}
+
 	const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true

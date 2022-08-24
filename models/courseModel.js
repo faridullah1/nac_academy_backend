@@ -42,6 +42,7 @@ const courseSchema = mongoose.Schema({
 		minLength: 10,
 		maxLength: 500
 	},
+	image: String
 });
 
 courseSchema.pre(/^find/, function(next) {
@@ -60,6 +61,7 @@ function validateCourse(course) {
 		duration: Joi.string().required(),
 		description: Joi.string().required().min(10).max(1000),
 		audience: Joi.string().required().min(10).max(500),
+		image: Joi.string()
 	});
 
 	return schema.validate(course);
